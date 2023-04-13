@@ -5,22 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.johnson.demo.model.Beer;
 import it.johnson.demo.service.BeerService;
 import it.johnson.demo.service.BeerServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.core.Is.is;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 //@SpringBootTest
@@ -51,13 +49,28 @@ class BeerControllerTest {
     @Test
     void updateById() {
     }
+    @BeforeEach
+    void setUp(){
+        beerServiceImpl = new BeerServiceImpl();
+    }
 
     @Test
-    void testCreateNewBeer() throws JsonProcessingException {
+    void testCreateNewBeer() throws Exception {
 
         Beer beer = beerServiceImpl.listBeer().get(0);
+        beer.setVersion(null);
+        beer.setId(null);
 
-        System.out.println(objectMapper.writeValueAsString(beer));
+        given(beerService.saveBeer(any(Beer.class))).willReturn(beerServiceImpl.listBeer().get(1));
+
+        mockMvc.perform(post("/api/v1/beer")
+                .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+
+
     }
 
     @Test
