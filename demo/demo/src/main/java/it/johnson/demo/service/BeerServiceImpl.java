@@ -109,8 +109,8 @@ public class BeerServiceImpl implements BeerService{
 
     @Override
     public void updateBeerPatchById(UUID beerId, Beer beer) {
-        Beer existing = beerMap.get(beerId);
-        if(StringUtils.hasText(beer.getBeerName())){
+        //Beer existing = beerMap.get(beerId);
+        /**if(StringUtils.hasText(beer.getBeerName())){
             existing.setBeerName(beer.getBeerName());
         }
         if(beer.getBeerStyle() != null){
@@ -124,6 +124,43 @@ public class BeerServiceImpl implements BeerService{
         }
         if(StringUtils.hasText(beer.getUpc())){
             existing.setUpc(beer.getUpc());
-        }
+        }**/
+
+        /**
+         * This version of the code uses a lambda expression as the second argument
+         * to the computeIfPresent() method. The lambda expression takes two arguments,
+         * id and existing, and updates the fields of existing based on the values
+         * of the corresponding fields in beer. The lambda expression then returns
+         * the updated existing object, which is stored back into the map using
+         * the computeIfPresent() method.
+         * */
+
+        beerMap.computeIfPresent(beerId, (id, existing) -> {
+            if (StringUtils.hasText(beer.getBeerName())) {
+                existing.setBeerName(beer.getBeerName());
+            }
+            if (beer.getBeerStyle() != null) {
+                existing.setBeerStyle(beer.getBeerStyle());
+            }
+            if (beer.getPrice() != null) {
+                existing.setPrice(beer.getPrice());
+            }
+            if (beer.getQuantityOnHand() != null) {
+                existing.setQuantityOnHand(beer.getQuantityOnHand());
+            }
+            if (StringUtils.hasText(beer.getUpc())) {
+                existing.setUpc(beer.getUpc());
+            }
+            return existing;
+        });
+
+        /**
+         * This version of the code uses a lambda expression as the second argument
+         * to the computeIfPresent() method. The lambda expression takes two arguments,
+         * id and existing, and updates the fields of existing based on the values
+         * of the corresponding fields in beer. The lambda expression then returns
+         * the updated existing object, which is stored back into the map using
+         * the computeIfPresent() method.
+         * */
     }
 }

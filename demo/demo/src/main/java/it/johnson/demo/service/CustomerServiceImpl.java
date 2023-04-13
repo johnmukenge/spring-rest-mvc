@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
@@ -93,5 +94,9 @@ public class CustomerServiceImpl implements CustomerService{
         if(customer.getVersion() != null ){
             existing.setVersion(customer.getVersion());
         }
+    }
+
+    private static <T> void checkAndSetAttribute(Optional<T> value, Consumer<T> setter) {
+        value.ifPresent(setter);
     }
 }
