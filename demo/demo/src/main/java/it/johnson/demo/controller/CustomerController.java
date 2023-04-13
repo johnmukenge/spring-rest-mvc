@@ -1,6 +1,5 @@
 package it.johnson.demo.controller;
 
-import it.johnson.demo.model.Beer;
 import it.johnson.demo.model.Customer;
 import it.johnson.demo.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -19,9 +18,15 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @DeleteMapping("{beerId}")
-    public ResponseEntity deleteById(@PathVariable("beerId") UUID beerId){
-        customerService.deleteById(beerId);
+    @PatchMapping("{customerId}")
+    public ResponseEntity updateBeerPatchById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer){
+        customerService.updateCustomerPatchById(customerId, customer);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("{customerId}")
+    public ResponseEntity deleteById(@PathVariable("customerId") UUID customerId){
+        customerService.deleteById(customerId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
