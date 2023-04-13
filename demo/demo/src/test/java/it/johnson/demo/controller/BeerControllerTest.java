@@ -1,5 +1,7 @@
 package it.johnson.demo.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.johnson.demo.model.Beer;
 import it.johnson.demo.service.BeerService;
 import it.johnson.demo.service.BeerServiceImpl;
@@ -30,10 +32,33 @@ class BeerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     BeerService beerService;
 
     BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
+
+    @Test
+    void updateBeerPatchById() {
+    }
+
+    @Test
+    void deleteById() {
+    }
+
+    @Test
+    void updateById() {
+    }
+
+    @Test
+    void testCreateNewBeer() throws JsonProcessingException {
+
+        Beer beer = beerServiceImpl.listBeer().get(0);
+
+        System.out.println(objectMapper.writeValueAsString(beer));
+    }
 
     @Test
     void testListBeers() throws Exception {
