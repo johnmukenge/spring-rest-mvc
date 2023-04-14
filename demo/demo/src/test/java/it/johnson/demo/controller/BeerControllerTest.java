@@ -1,6 +1,5 @@
 package it.johnson.demo.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.johnson.demo.model.Beer;
 import it.johnson.demo.service.BeerService;
@@ -17,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -138,7 +138,7 @@ class BeerControllerTest {
 
     @Test
     void getBeerByIdNotFound() throws Exception {
-        given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+        given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
                 .andExpect(status().isNotFound())
@@ -148,7 +148,7 @@ class BeerControllerTest {
     void getBeerById() throws Exception {
         Beer beerTester = beerServiceImpl.listBeer().get(0);
 
-        given(beerService.getBeerById(beerTester.getId())).willReturn(beerTester);
+        given(beerService.getBeerById(beerTester.getId())).willReturn(Optional.of(beerTester));
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, beerTester.getId())
                 .accept(MediaType.APPLICATION_JSON))
