@@ -1,6 +1,6 @@
 package it.johnson.demo.controller;
 
-import it.johnson.demo.model.Customer;
+import it.johnson.demo.model.CustomerDTO;
 import it.johnson.demo.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +20,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity updateBeerPatchById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer){
-        customerService.updateCustomerPatchById(customerId, customer);
+    public ResponseEntity updateBeerPatchById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customerDTO){
+        customerService.updateCustomerPatchById(customerId, customerDTO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -32,29 +32,29 @@ public class CustomerController {
     }
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("customerId")UUID customerId, @RequestBody Customer customer){
+    public ResponseEntity updateById(@PathVariable("customerId")UUID customerId, @RequestBody CustomerDTO customerDTO){
 
-        customerService.updateBeerById(customerId, customer);
+        customerService.updateBeerById(customerId, customerDTO);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @PostMapping(value = CUSTOMER_PATH)
-    public ResponseEntity handlePost(@RequestBody Customer customer){
-        Customer savedCustomer = customerService.saveCustomer(customer);
+    public ResponseEntity handlePost(@RequestBody CustomerDTO customerDTO){
+        CustomerDTO savedCustomerDTO = customerService.saveCustomer(customerDTO);
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add("Location", CUSTOMER_PATH + savedCustomer.getId().toString());
+        headers.add("Location", CUSTOMER_PATH + savedCustomerDTO.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @GetMapping(value = CUSTOMER_PATH)
-    public List<Customer> listOfCustomers(){
+    public List<CustomerDTO> listOfCustomers(){
         return customerService.listCustomers();
     }
     @GetMapping(value = CUSTOMER_PATH_ID)
-    public Customer retrieveCustomer(@PathVariable("customerId") UUID customerId){
+    public CustomerDTO retrieveCustomer(@PathVariable("customerId") UUID customerId){
         return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 }

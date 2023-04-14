@@ -1,6 +1,6 @@
 package it.johnson.demo.service;
 
-import it.johnson.demo.model.Beer;
+import it.johnson.demo.model.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,15 +8,15 @@ import java.util.UUID;
 
 public interface BeerService {
 
-    List<Beer> listBeer();
+    List<BeerDTO> listBeer();
 
-    Optional<Beer> getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-    Beer saveBeer(Beer beer);
+    BeerDTO saveBeer(BeerDTO beerDTO);
 
-    void updateBeerById(UUID beerId, Beer beer);
+    void updateBeerById(UUID beerId, BeerDTO beerDTO);
 
     void deleteById(UUID beerId);
 
-    void updateBeerPatchById(UUID beerId, Beer beer);
+    void updateBeerPatchById(UUID beerId, BeerDTO beerDTO);
 }
