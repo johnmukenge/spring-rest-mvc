@@ -1,8 +1,7 @@
 package it.johnson.demo.controller;
 
-import it.johnson.demo.entities.Beer;
 import it.johnson.demo.entities.Customer;
-import it.johnson.demo.model.BeerDTO;
+import it.johnson.demo.mappers.CustomerMappers;
 import it.johnson.demo.model.CustomerDTO;
 import it.johnson.demo.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -28,11 +27,30 @@ class CustomerControllerIT {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    CustomerMappers customerMappers;
+
     @Test
     void testCustomerIdNotFound(){
         assertThrows(NotFoundException.class, () -> {
             customerController.retrieveCustomer(UUID.randomUUID());
         });
+    }
+
+    @Test
+    void updateExistingBeer(){
+        Customer customer = customerRepository.findAll().get(0);
+        CustomerDTO customerDTO = customerMappers.customerToCustomerDto(customer);
+        customerDTO.setId(null);
+        customerDTO.setVersion(null);
+        final String customerName = "UPDATED";
+        customerDTO.setCustomerName(customerName);
+
+        ResponseEntity responseEntity = customerController.updateById(customer.getId(), customerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Customer updateCustomer = customerRepository.findById(customer.getId()).get();
+        assertThat(updateCustomer.getCustomerName()).isEqualTo(customerName);
     }
 
     @Transactional
