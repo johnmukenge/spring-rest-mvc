@@ -1,5 +1,6 @@
 package it.johnson.demo.controller;
 
+import it.johnson.demo.entities.Beer;
 import it.johnson.demo.entities.Customer;
 import it.johnson.demo.mappers.CustomerMappers;
 import it.johnson.demo.model.CustomerDTO;
@@ -30,6 +31,19 @@ class CustomerControllerIT {
     @Autowired
     CustomerMappers customerMappers;
 
+    @Transactional
+    @Rollback
+    @Test
+    void deleteByIdFound(){
+        Customer customer = customerRepository.findAll().get(0);
+
+        ResponseEntity responseEntity = customerController.deleteById(customer.getId());
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        assertThat(customerRepository.findById(customer.getId()).isEmpty());
+    }
+
     @Test
     void testUpdateNotFound(){
         assertThrows(NotFoundException.class, () ->{
@@ -44,6 +58,8 @@ class CustomerControllerIT {
         });
     }
 
+    @Transactional
+    @Rollback
     @Test
     void updateExistingCustomer(){
         Customer customer = customerRepository.findAll().get(0);
