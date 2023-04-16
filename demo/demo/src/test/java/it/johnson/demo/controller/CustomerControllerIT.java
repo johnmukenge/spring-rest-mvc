@@ -31,6 +31,13 @@ class CustomerControllerIT {
     CustomerMappers customerMappers;
 
     @Test
+    void testUpdateNotFound(){
+        assertThrows(NotFoundException.class, () ->{
+            customerController.updateById(UUID.randomUUID(), CustomerDTO.builder().build());
+        });
+    }
+
+    @Test
     void testCustomerIdNotFound(){
         assertThrows(NotFoundException.class, () -> {
             customerController.retrieveCustomer(UUID.randomUUID());
@@ -38,7 +45,7 @@ class CustomerControllerIT {
     }
 
     @Test
-    void updateExistingBeer(){
+    void updateExistingCustomer(){
         Customer customer = customerRepository.findAll().get(0);
         CustomerDTO customerDTO = customerMappers.customerToCustomerDto(customer);
         customerDTO.setId(null);
