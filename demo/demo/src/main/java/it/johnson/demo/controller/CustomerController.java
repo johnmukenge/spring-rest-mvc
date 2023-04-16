@@ -34,7 +34,7 @@ public class CustomerController {
     @PutMapping(CUSTOMER_PATH_ID)
     public ResponseEntity updateById(@PathVariable("customerId")UUID customerId, @RequestBody CustomerDTO customerDTO){
 
-        customerService.updateBeerById(customerId, customerDTO);
+        customerService.updateCustomerById(customerId, customerDTO);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

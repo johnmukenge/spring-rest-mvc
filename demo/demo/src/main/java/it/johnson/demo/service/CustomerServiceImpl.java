@@ -68,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public void updateBeerById(UUID customerId, CustomerDTO customerDTO) {
+    public void updateCustomerById(UUID customerId, CustomerDTO customerDTO) {
         CustomerDTO customerDTOToUpdate = CustomerDTO.builder()
                 .id(customerId)
                 .customerName(customerDTO.getCustomerName())

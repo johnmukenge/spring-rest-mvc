@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.core.Is.is;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -97,11 +96,9 @@ class CustomerControllerTest {
     }
 
     @Test
-    void testUpdateeNewCustomer() throws Exception {
+    void testUpdateNewCustomer() throws Exception {
 
         CustomerDTO customerDTO = customerServiceImpl.listCustomers().get(0);
-
-        given(customerService.saveCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 
         mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, customerDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
@@ -109,7 +106,7 @@ class CustomerControllerTest {
                         .content(objectMapper.writeValueAsString(customerDTO)))
                 .andExpect(status().isNoContent());
 
-        verify(customerService).updateCustomerPatchById(any(UUID.class), any(CustomerDTO.class));
+        verify(customerService).updateCustomerById(any(UUID.class), any(CustomerDTO.class));
     }
 
     @Test
@@ -137,7 +134,7 @@ class CustomerControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(2)));
+                .andExpect(jsonPath("$.length()", is(3)));
     }
 
     @Test

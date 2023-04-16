@@ -10,6 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+/**
+ * Why use Java optional?
+ * Using Java Optional is generally considered a best practice since it indicates
+ * the return value may be null and reduces null type checking.
+ * Using optional also helps reduce unintentional Null pointer errors at runtime.
+ * */
 
 @Service
 @Primary
@@ -19,12 +27,16 @@ public class CustomerServiceJPA implements CustomerService{
     private final CustomerMappers customerMappers;
     @Override
     public List<CustomerDTO> listCustomers() {
-        return null;
+        return customerRepository.findAll()
+                .stream()
+                .map(customerMappers::customerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(customerMappers.customerToCustomerDto(customerRepository.findById(id)
+                     .orElse(null)));
     }
 
     @Override
@@ -33,7 +45,7 @@ public class CustomerServiceJPA implements CustomerService{
     }
 
     @Override
-    public void updateBeerById(UUID customerId, CustomerDTO customerDTO) {
+    public void updateCustomerById(UUID customerId, CustomerDTO customerDTO) {
 
     }
 
