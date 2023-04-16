@@ -36,11 +36,21 @@ public class BeerServiceJPA implements BeerService{
 
     @Override
     public BeerDTO saveBeer(BeerDTO beerDTO) {
-        return null;
+
+        return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beerDTO)));
     }
 
     @Override
     public void updateBeerById(UUID beerId, BeerDTO beerDTO) {
+
+        beerRepository.findById(beerId).ifPresent(founder -> {
+            founder.setBeerName(beerDTO.getBeerName());
+            founder.setBeerStyle(beerDTO.getBeerStyle());
+            founder.setUpc(beerDTO.getUpc());
+            founder.setPrice(beerDTO.getPrice());
+
+            beerRepository.save(founder);
+        });
 
     }
 

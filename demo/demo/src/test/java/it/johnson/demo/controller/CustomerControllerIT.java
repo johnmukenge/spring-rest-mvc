@@ -1,12 +1,16 @@
 package it.johnson.demo.controller;
 
+import it.johnson.demo.entities.Beer;
 import it.johnson.demo.entities.Customer;
+import it.johnson.demo.model.BeerDTO;
 import it.johnson.demo.model.CustomerDTO;
 import it.johnson.demo.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
@@ -29,6 +33,26 @@ class CustomerControllerIT {
         assertThrows(NotFoundException.class, () -> {
             customerController.retrieveCustomer(UUID.randomUUID());
         });
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void saveCustomerTest(){
+        CustomerDTO customerDTO = CustomerDTO.builder()
+                .customerName("New Customer")
+                .build();
+
+        ResponseEntity responseEntity = customerController.handlePost(customerDTO);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+
+        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+        UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+        Customer customer = customerRepository.findById(savedUUID).get();
+        assertThat(customer).isNotNull();
     }
 
     @Test

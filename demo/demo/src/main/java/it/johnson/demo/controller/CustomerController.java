@@ -44,7 +44,7 @@ public class CustomerController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add("Location", CUSTOMER_PATH + savedCustomerDTO.getId().toString());
+        headers.add("Location", CUSTOMER_PATH + "/" + savedCustomerDTO.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }

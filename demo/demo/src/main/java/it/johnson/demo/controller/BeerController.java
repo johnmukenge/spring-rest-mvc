@@ -50,7 +50,7 @@ public class BeerController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add("Location", BEER_PATH + saveBeerDTO.getId().toString());
+        headers.add("Location", BEER_PATH + "/" + saveBeerDTO.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
